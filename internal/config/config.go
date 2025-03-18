@@ -1,6 +1,10 @@
 package config
 
-import "time"
+import (
+	"flag"
+	"os"
+	"time"
+)
 
 type Config struct {
 	Env         string        `yaml:"env"`
@@ -12,4 +16,29 @@ type Config struct {
 type GRPCConfig struct {
 	Port    int           `yaml:"port" env-default:"44044"`
 	Timeout time.Duration `yaml:"timeout"`
+}
+
+func MustLoad() *Config {
+	configPath := fetchConfigPath()
+	if configPath == "" {
+		panic("config file path is empty")
+	}
+
+	if _, err := os.Stat(configPath); os.IsNotExist(err) {
+		panic("config file not exist " + configPath)
+	}
+
+	var cfg Config
+	if err := cleanenv
+}
+
+// priority: flag > env > default
+func fetchConfigPath() string {
+	var res string
+	flag.StringVar(&res, "config", "", "path to config file")
+	flag.Parse()
+	if res == "" {
+		res = os.Getenv("CONFIG_PATH")
+	}
+	return res
 }
