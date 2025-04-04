@@ -1,0 +1,5 @@
+env: "local"
+storage_path: "postgres://postgres:postgres@postgres:5432/postgres?sslmode=disable"
+grpc:
+  port: 44044
+  timeout: 1h

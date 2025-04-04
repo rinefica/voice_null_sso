@@ -2,6 +2,7 @@ package config
 
 import (
 	"flag"
+	"github.com/ilyakaznacheev/cleanenv"
 	"os"
 	"time"
 )
@@ -29,7 +30,10 @@ func MustLoad() *Config {
 	}
 
 	var cfg Config
-	if err := cleanenv
+	if err := cleanenv.ReadConfig(configPath, &cfg); err != nil {
+		panic("config is incorrect " + err.Error())
+	}
+	return &cfg
 }
 
 // priority: flag > env > default
